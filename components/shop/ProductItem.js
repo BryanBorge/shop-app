@@ -69,10 +69,15 @@ const styles = StyleSheet.create({
   },
   image: { width: "100%", height: "100%" },
   title: {
+    fontFamily: "open-sans-bold",
     fontSize: 18,
-    marginVertical: 4,
+    marginVertical: 2,
   },
-  price: { fontSize: 14, color: "#888" },
+  price: {
+    fontFamily: "open-sans",
+    fontSize: 14,
+    color: "#888",
+  },
   actions: {
     flexDirection: "row",
     justifyContent: "space-between",
