@@ -1,9 +1,14 @@
 import React from "react";
 import { View, StyleSheet, Text, FlatList, Button } from "react-native";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import Colors from "../../constants/Colors";
+import CartItem from "../../components/shop/CartItem";
+import * as orderActions from "../../store/actions/order";
+import * as cartActions from "../../store/actions/cart";
+
 const CartScreen = props => {
   const cartTotalAmount = useSelector(state => state.cart.totalAmount);
+  const items = useSelector(state => state.cart.items);
   const cartItems = useSelector(state => {
     const transformedCartItems = [];
     for (const key in state.cart.items) {
@@ -15,8 +20,12 @@ const CartScreen = props => {
         sum: state.cart.items[key].sum,
       });
     }
-    return transformedCartItems;
+    return transformedCartItems.sort((a, b) =>
+      a.productId > b.productId ? 1 : -1
+    );
   });
+
+  const dispatch = useDispatch();
   return (
     <View style={styles.screen}>
       <View style={styles.summary}>
@@ -28,13 +37,31 @@ const CartScreen = props => {
           title='Order now'
           color={Colors.accent}
           disabled={cartItems.length === 0}
+          onPress={() => {
+            dispatch(orderActions.addOrder(cartItems, cartTotalAmount));
+          }}
         />
       </View>
-      <View>
-        <FlatList />
-      </View>
+      <FlatList
+        data={cartItems}
+        keyExtractor={item => item.productId}
+        renderItem={itemData => (
+          <CartItem
+            quantity={itemData.item.quantity}
+            title={itemData.item.productTitle}
+            amount={itemData.item.sum}
+            onRemove={() => {
+              dispatch(cartActions.removeFromCart(itemData.item.productId));
+            }}
+          />
+        )}
+      />
     </View>
   );
+};
+
+CartScreen.navigationOptions = {
+  headerTitle: "Your Cart",
 };
 
 const styles = StyleSheet.create({
