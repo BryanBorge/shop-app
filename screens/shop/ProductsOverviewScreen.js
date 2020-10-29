@@ -18,7 +18,6 @@ const ProductsOverviewScreen = props => {
       productTitle: title,
     });
   };
-
   return (
     <FlatList
       data={products}
@@ -33,7 +32,7 @@ const ProductsOverviewScreen = props => {
         >
           <Button
             color={Colors.primary}
-            title='View details'
+            title='VIEW DETAILS'
             onPress={() => {
               selectItemHandler(itemData.item.id, itemData.item.title);
             }}
