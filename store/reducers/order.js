@@ -9,7 +9,7 @@ export default (state = initialState, action) => {
       const newOrder = new Order(
         new Date().toString(),
         action.orderData.items,
-        action.orderData.amount,
+        action.orderData.amount.toFixed(2),
         new Date()
       );
       return { ...state, orders: state.orders.concat(newOrder) };
