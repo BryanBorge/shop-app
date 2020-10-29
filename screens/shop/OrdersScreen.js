@@ -2,6 +2,7 @@ import React from "react";
 import { Text, FlatList, Platform } from "react-native";
 import { useSelector } from "react-redux";
 import HeaderButton from "../../components/UI/HeaderButton";
+import OrderItem from "../../components/shop/OrderItem";
 import { HeaderButtons, Item } from "react-navigation-header-buttons";
 
 const OrderScreen = props => {
@@ -9,7 +10,12 @@ const OrderScreen = props => {
   return (
     <FlatList
       data={orders}
-      renderItem={itemData => <Text>{itemData.item.totalAmount}</Text>}
+      renderItem={itemData => (
+        <OrderItem
+          amount={itemData.item.totalAmount}
+          date={itemData.item.readableDate}
+        />
+      )}
     />
   );
 };
