@@ -13,7 +13,7 @@ import { HeaderButtons, Item } from "react-navigation-header-buttons";
 import * as productsActions from "../../store/actions/products";
 import Input from "../../components/UI/Input";
 
-const FORM_UPDATE = "UPDATE";
+const FORM_UPDATE = "FORM_UPDATE";
 
 const formReducer = (state, action) => {
   if (action.type === FORM_UPDATE) {
@@ -21,18 +21,14 @@ const formReducer = (state, action) => {
       ...state.inputValues,
       [action.input]: action.value,
     };
-
     const updatedValidities = {
       ...state.inputValidities,
       [action.input]: action.isValid,
     };
-
     let updatedFormIsValid = true;
-
     for (const key in updatedValidities) {
       updatedFormIsValid = updatedFormIsValid && updatedValidities[key];
     }
-
     return {
       formIsValid: updatedFormIsValid,
       inputValidities: updatedValidities,
@@ -47,29 +43,27 @@ const EditProductScreen = props => {
   const editedProduct = useSelector(state =>
     state.products.userProducts.find(prod => prod.id === prodId)
   );
-
   const dispatch = useDispatch();
 
   const [formState, dispatchFormState] = useReducer(formReducer, {
     inputValues: {
       title: editedProduct ? editedProduct.title : "",
-      imageURL: editedProduct ? editedProduct.imageURL : "",
-      desc: editedProduct ? editedProduct.desc : "",
+      imageUrl: editedProduct ? editedProduct.imageUrl : "",
+      description: editedProduct ? editedProduct.description : "",
       price: "",
     },
     inputValidities: {
       title: editedProduct ? true : false,
-      imageURL: editedProduct ? true : false,
-      desc: editedProduct ? true : false,
+      imageUrl: editedProduct ? true : false,
+      description: editedProduct ? true : false,
       price: editedProduct ? true : false,
     },
     formIsValid: editedProduct ? true : false,
   });
 
-  //useCallback ensures that this fn is recreated each re render
   const submitHandler = useCallback(() => {
     if (!formState.formIsValid) {
-      Alert.alert("Wrong input!", "Please check the errors", [
+      Alert.alert("Wrong input!", "Please check the errors in the form.", [
         { text: "Okay" },
       ]);
       return;
@@ -79,16 +73,16 @@ const EditProductScreen = props => {
         productsActions.updateProduct(
           prodId,
           formState.inputValues.title,
-          formState.inputValues.desc,
-          formState.inputValues.imageURL
+          formState.inputValues.description,
+          formState.inputValues.imageUrl
         )
       );
     } else {
       dispatch(
         productsActions.createProduct(
           formState.inputValues.title,
-          formState.inputValues.desc,
-          formState.inputValues.imageURL,
+          formState.inputValues.description,
+          formState.inputValues.imageUrl,
           +formState.inputValues.price
         )
       );
@@ -111,7 +105,6 @@ const EditProductScreen = props => {
     },
     [dispatchFormState]
   );
-
   return (
     <KeyboardAvoidingView
       style={{ flex: 1 }}
@@ -170,6 +163,7 @@ const EditProductScreen = props => {
             onInputChange={inputChangeHandler}
             initialValue={editedProduct ? editedProduct.desc : ""}
             initiallyValid={!!editedProduct}
+            returnKeyType='next'
             required
             minLength={5}
           />
